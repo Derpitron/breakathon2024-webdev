@@ -1,1 +1,4 @@
-replace discord.py with interactions.py (because that has voice stream recieve functions)
+replace discord.py with interactions.py (because that has voice stream recieve functions) i think??
+
+audioanalysis.py is expecting .flac format binary file. or maybe base64 encoded string.
+invite the discord bot to our server
