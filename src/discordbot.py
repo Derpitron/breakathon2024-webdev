@@ -3,7 +3,7 @@ import interactions
 
 from dotenv import load_dotenv
 
-import audioanalysis
+#import audioanalysis
 import random
 
 BOT_ID     = load_dotenv("BOT_ID")
