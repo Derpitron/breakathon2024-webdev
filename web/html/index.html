@@ -1,0 +1,21 @@
+<html>
+
+<body>
+  <h1>Internal configuration page</h1>
+  <h3>Guru Meditation Centre</h3>
+  <b>DO NOT PUSH TO PROD.</b>
+  <br>
+
+  <p>Kept this here for ease of access and blazingly fast config iteration.</p>
+  <form action="/getRouterConfig1" method="post">
+      <button type="submit">Download Config</button>
+  </form>
+
+  <label for="cfgupload">Upload the configuration file</label>
+  <form action="/upload" method="post" enctype="multipart/form-data">
+    <input type="file" id="cfgupload" name="file" accept=".py" required>
+    <button type="submit">Upload</button>
+  </form>
+</body>
+
+</html>
