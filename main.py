@@ -1,4 +1,4 @@
-import src.discordbot
+import src.discordbot.run_discord_bot as run_discord_bot
 
 def main():
     run_discord_bot()
