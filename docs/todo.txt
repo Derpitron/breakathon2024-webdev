@@ -1,0 +1,1 @@
+replace discord.py with interactions.py (because that has voice stream recieve functions)
