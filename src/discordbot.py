@@ -1,6 +1,5 @@
 #todo fill in and implement
-import discord
-from discord.ext import commands
+import interactions
 
 from dotenv import load_dotenv
 
@@ -12,37 +11,50 @@ BOT_TOKEN  = load_dotenv("BOT_TOKEN")
 SERVER_ID  = load_dotenv("SERVER_ID")
 CHANNEL_ID = load_dotenv("CHANNEL_ID")
 
-intents = discord.intents.default()
+import discord
+from discord.ext import commands
+import asyncio
+
+intents = discord.Intents.default()
+intents.message_content = True
+intents.guilds = True
+intents.members = True
 intents.voice_states = True
-bot = commands.Bot(command_prefix="!", intents=intents)
 
-vclients_perguild = {}
+client = commands.Bot(command_prefix="!", intents=intents)
 
-@bot.event
+@client.event
 async def on_ready():
-    print("Logged in as", bot.user)
+    print(f'Logged in as {client.user}')
 
-@bot.command()
-async def join(ctx):
-    channel = ctx.author.voice.channel
-    vcstate = channel.voice_states
-    if len(vcstate) > 0:
-        vclient = await channel.connect()
-        vclients_perguild[ctx.guild.id] = vclient
-        print("connected to voice channel")
+@client.command()
+async def join(context):
+    """Command to make the bot join a voice channel."""
+    channel = discord.utils.get(context.guild.voice_channels, id=CHANNEL_ID)
+    if channel:
+        await channel.connect()
 
-@bot.command()
-async def listen(ctx):
-    if ctx.guild.id in voice_clients:
-        vclient = vclients_perguild[ctx.guild.id]
-        vclient.listen(lambda audio: process_audio(audio))
-        
+@client.command()
+async def record(context):
+    """Record audio from the voice channel."""
+    channel = discord.utils.get(context.guild.voice_channels, id=CHANNEL_ID)
+    if channel:
+        voice_client = await channel.connect()
+        # Start recording audio (we'll use FFmpeg to process audio)
+        # You need to set up ffmpeg to capture the stream
+        audio_source = await voice_client.listen()
+        with open('tmp/audio_output.pcm', 'wb') as f:
+            while True:
+                data = await audio_source.read(1024)
+                if not data:
+                    break
+                f.write(data)
+        await voice_client.disconnect()
 
-        sentiment = audio-analysis.getStream(audioStream)
+@client.command()
+async def leave(context):
+    """Make the bot leave the voice channel."""
+    if context.voice_client:
+        await context.voice_client.disconnect()
 
-        audioList = {
-            "angry": ['list', 'of', 'songfilenames'],
-            "happy": ['list', 'of', 'songfilenames'],
-        }
-
-        bot.playAudio(random.randchoice(audioList[sentiment]))
+client.run(BOT_TOKEN)
