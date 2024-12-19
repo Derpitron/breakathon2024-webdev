@@ -1,4 +1,3 @@
-
 import requests
 
 API_URL = "https://api-inference.huggingface.co/models/ehcalabres/wav2vec2-lg-xlsr-en-speech-emotion-recognition"
@@ -43,5 +42,3 @@ def get_highest_score_label(json_data):
     except json.JSONDecodeError:
         print("Invalid JSON string provided.")
         return None
-    
-get_highest_score_label(output) #returns the highest value of the score and the corresponding emotion 

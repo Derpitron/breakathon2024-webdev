@@ -1,10 +1,11 @@
 # todo fill in and implement
 import interactions
+from interactions.api.voice.audio import AudioVolume
 import os
 import subprocess
+from audioanalysis import get_highest_score_label
 
 from dotenv import load_dotenv
-
 load_dotenv()
 
 # import audioanalysis
@@ -25,7 +26,7 @@ intents.voice_states = True
 
 client = commands.Bot(command_prefix="!", intents=intents)
 
-songs = {"angry": ["1.mp3", "2.mp3"], "happy": ["3.mp3", "4.mp3"]}
+song = '..\\audio\\angry.mp3'
 
 
 @client.event
@@ -40,47 +41,12 @@ async def join(context):
     if channel:
         await channel.connect()
 
+@interactions.command()
+async def play_file(ctx: interactions.SlashContext):
+    audio = AudioVolume("some_file.wav")
+    await ctx.voice_state.play(audio)
 
-def pcm2flac(pcm_file):
-    # f is a binary file in pcm format
-    flac_f = "tmp/flac_output.flac"
-    command = [
-        "ffmpeg",
-        "-f",
-        "s16le",
-        "-ar",
-        "44100",
-        "-ac",
-        "2",
-        "-i",
-        pcm_file,
-        flac_f,
-    ]
-    subprocess.run(command, check=True)
-
-
-@client.command()
-async def record(context):
-    """Record audio from the voice channel."""
-    channel = discord.utils.get(context.guild.voice_channels, id=CHANNEL_ID)
-    if channel:
-        voice_client = await channel.connect()
-        # Start recording audio (we'll use FFmpeg to process audio)
-        # You need to set up ffmpeg to capture the stream
-        audio_source = await voice_client.listen()
-        pcm_f = "tmp/audio_output.pcm"
-        flac_f = "tmp/flac_output.flac"
-        with open(pcm_f, "wb") as f:
-            while True:
-                data = await audio_source.read(1024)
-                if not data:
-                    break
-                f.write(data)
-                pcm2flac(f)
-        await voice_client.disconnect()
-
-        os.remove(pcm_f)
-        os.remove(flac_f)
+#todo record flac audio from system mic
 
 
 @client.command()
